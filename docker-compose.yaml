@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:15 # Use the latest PostgreSQL 15 image
+    container_name: postgres_db # Optional: name your container
+    ports:
+      - "5432:5432" # Map the PostgreSQL port to the host
+    environment:
+      POSTGRES_USER: yourusername # Set your PostgreSQL username
+      POSTGRES_PASSWORD: yourpassword # Set your PostgreSQL password
+      POSTGRES_DB: pokedex # Set the name of the initial database
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persistent storage for data
+
+volumes:
+  postgres_data:
+    driver: local # Use local storage for the volume
