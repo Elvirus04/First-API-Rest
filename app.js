@@ -1,21 +1,21 @@
 // Mtn on utilise + import que require, comme dans React, import ... from ...
 // rôle app.js = démarrer un serveur express
 const express = require("express"); // On récupère le paquet express dans notre code, en utilisant le mot clé "require" qui indique à JS d'aller chercher la dépendance express dans node_modules.
-const morgan = require("morgan");
 const favicon = require("serve-favicon");
 const bodyParser = require("body-parser");
 const sequelize = require("./src/db/sequelize");
 
 const app = express(); // On crée une instance d'une app express, grâce à la méthode du même nom. Il s'agit du petit serveur web sur lequel va fonctionner l'API Rest.
-const port = 3000; // On définit une simple constante nommée port, port sur lequel on va démarrer l'API Rest.
+const port = process.env.PORT || 3000; // On définit une simple constante nommée port, port sur lequel on va démarrer l'API Rest.
 
 // Middleware
-app
-  .use(favicon(__dirname + "/favicon.ico"))
-  .use(morgan("dev"))
-  .use(bodyParser.json());
+app.use(favicon(__dirname + "/favicon.ico")).use(bodyParser.json());
 
 sequelize.initDb();
+
+app.get("/", (req, res) => {
+  res.json("Hello, Netlify !");
+});
 
 // const findAllPokemons = require ("./src/routes/findAllPokemons");
 // findAllPokemons(app);
@@ -39,3 +39,8 @@ app.listen(port, () =>
     `Notre application Node a démarrée sur : http://localhost:${port}`
   )
 );
+
+// Production
+// Ne pas utiliser Nodemon
+// Passer Express en mode production
+// Ne pas utiliser les dépendances de développement
