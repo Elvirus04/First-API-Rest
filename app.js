@@ -9,7 +9,7 @@ const sequelize = require("./src/db/sequelize");
 const app = express(); // On crée une instance d'une app express, grâce à la méthode du même nom. Il s'agit du petit serveur web sur lequel va fonctionner l'API Rest.
 const port = 3000; // On définit une simple constante nommée port, port sur lequel on va démarrer l'API Rest.
 
-// Middleware *
+// Middleware
 app
   .use(favicon(__dirname + "/favicon.ico"))
   .use(morgan("dev"))
@@ -24,6 +24,14 @@ require("./src/routes/findPokemonByPk")(app);
 require("./src/routes/createPokemon")(app);
 require("./src/routes/updatePokemon")(app);
 require("./src/routes/deletePokemon")(app);
+require("./src/routes/login")(app);
+
+// Ajout gestion d'erreur 404
+app.use(({ res }) => {
+  const message =
+    "Impossible de trouver la ressource demandée ! Vous pouvez essayer une autre URL.";
+  res.status(404).json({ message });
+});
 
 // On démarre l'API Rest sur le port 3000 et on affiche un message de confirmation dans le terminal, grâce à la méthode listen.
 app.listen(port, () =>
@@ -31,10 +39,3 @@ app.listen(port, () =>
     `Notre application Node a démarrée sur : http://localhost:${port}`
   )
 );
-
-// * Middleware = fonction JS capables d'intéragir avec les requêtes entrantes (req) et sortantes (res) de l'API Rest.
-// Middleware A permet d'appliquer un traitement aux requêtes http entrantes et sortantes.
-// Ils fonctionnent par-dessus les endpoints existants.
-// 5 catégories : le middleware d'application, le middleware du routeur, le middleware de traitement d'erreurs, le middleware intégré (express.static), et le middleware tiers.
-// Tous les middlewares sont interconnectés et communiquent entre eux.
-// Bien réfléchier à l'ordre des middlewares car cela peut impacter fortement le fonctionnement de l'app.
