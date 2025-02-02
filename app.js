@@ -4,12 +4,16 @@ const express = require("express"); // On récupère le paquet express dans notr
 const favicon = require("serve-favicon");
 const bodyParser = require("body-parser");
 const sequelize = require("./src/db/sequelize");
+const cors = require("cors");
 
 const app = express(); // On crée une instance d'une app express, grâce à la méthode du même nom. Il s'agit du petit serveur web sur lequel va fonctionner l'API Rest.
 const port = process.env.PORT || 3000; // On définit une simple constante nommée port, port sur lequel on va démarrer l'API Rest.
 
 // Middleware
-app.use(favicon(__dirname + "/favicon.ico")).use(bodyParser.json());
+app
+  .use(favicon(__dirname + "/favicon.ico"))
+  .use(bodyParser.json())
+  .use(cors()); // définit des options par défaut (origin (qui peut accéder à l'API Rest), methods (comment ?))
 
 sequelize.initDb();
 

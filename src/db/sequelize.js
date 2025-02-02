@@ -4,21 +4,34 @@ const UserModel = require("../models/user");
 const pokemons = require("./mock-pokemon");
 const bcrypt = require("bcrypt");
 
-// ORM
-const sequelize = new Sequelize("pokedex", "yourusername", "yourpassword", {
-  host: "localhost",
-  dialect: "postgres",
-  dialectOptions: {
-    timezone: "Etc/GMT-2",
-  },
-  logging: false,
-});
+let sequelize;
+
+if (process.env.NODE_ENV === "production") {
+  sequelize = new Sequelize("", "", "", {
+    host: "chimerical-pie-b383b4.netlify.app", // ?
+    dialect: "postgres",
+    dialectOptions: {
+      timezone: "Etc/GMT-2",
+    },
+    logging: true,
+  });
+} else {
+  sequelize = new Sequelize("pokedex", "yourusername", "yourpassword", {
+    host: "localhost",
+    dialect: "postgres",
+    dialectOptions: {
+      timezone: "Etc/GMT-2",
+    },
+    logging: false,
+  });
+}
 
 const Pokemon = PokemonModel(sequelize, DataTypes);
 const User = UserModel(sequelize, DataTypes);
 
 const initDb = () => {
   return sequelize.sync({ force: true }).then((_) => {
+    // juste sync() au moment du déploiement ?
     pokemons.map((pokemon) => {
       Pokemon.create({
         name: pokemon.name,
